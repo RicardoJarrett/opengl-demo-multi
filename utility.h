@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
+
 struct lineData {
 	size_t pos;
 	std::string* line;

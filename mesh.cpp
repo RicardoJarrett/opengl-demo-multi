@@ -2,11 +2,7 @@
 
 #include <iostream>
 
-mesh::mesh(vtni* data, GLuint texID) : texID(texID), vertexBufferID(0), vertexArrayID(0), elementBufferID(0), size(0) {
-	if (this->texID < 0) {
-		std::cout << "Null texID\n";
-		return;
-	}
+mesh::mesh(vtni* data) : vertexBufferID(0), vertexArrayID(0), elementBufferID(0), size(0) {
 	vtni& _data = *data;
 	if (_data.size <= 0) {
 		std::cout << "Error: vtni size: " << _data.size << "\n";

@@ -8,5 +8,5 @@ class mesh {
 public:
 	GLuint vertexBufferID, elementBufferID, texID, vertexArrayID;
 	int size;
-	mesh(vtni* data, GLuint texID);
+	mesh(vtni* data);
 };

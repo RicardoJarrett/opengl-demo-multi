@@ -4,6 +4,8 @@
 
 #include "utility.h"
 #include "mesh.h"
+#include "model.h"
+
 #include <glm/gtc/type_ptr.hpp>
 
 Demo::Demo(GLFWwindow* window) : window(window), cube_mesh(nullptr), uniTrans(0) {
@@ -48,22 +50,21 @@ void create_shaders(GLuint* vs, GLuint* fs, GLuint* shader_programme, const char
 int Demo::load_assets() {
 	std::string objPath = "C:\\Users\\ricar\\Documents\\GitHub\\opengl-demo\\opengl-demo-multi\\cube.obj";
 	std::string texPath = "C:\\Users\\ricar\\Documents\\GitHub\\opengl-demo\\opengl-demo-multi\\cube.png";
-	//std::string objPath = "cube.obj";
-	//std::string texPath = "cube.png";
 	GLuint texID = 0;
 	vtni cube_vtni;
 	loader::create_object(&cube_vtni, objPath);
 	loader::load_tex(texPath, &texID);
-	cube_mesh = new mesh(&cube_vtni, texID);
+
+	cube_mesh = new mesh(&cube_vtni);
+	model cube_model(cube_mesh, texID);
+	GLuint cube_instance = cube_model.create_instance();
+	glm::mat4 local_trans = cube_model.get_local_trans(cube_instance);
 
 	const char* vertex_shader =
 		"#version 330 core\n"
 		"layout(location = 0) in vec3 pos;"
 		"layout(location = 1) in vec2 tex;"
 		"layout(location = 2) in vec3 normal;"
-		//"in vec3 pos;"
-		//"in vec2 tex;"
-		//"in vec3 normal;"
 		"out vec2 v_texCoords;"
 		"uniform mat4 trans;"
 		"void main(){"
