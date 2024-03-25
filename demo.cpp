@@ -3,12 +3,14 @@
 #include <iostream>
 
 #include "utility.h"
-#include "mesh.h"
-#include "model.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
-Demo::Demo(GLFWwindow* window) : window(window), cube_mesh(nullptr), uniTrans(0) {
+Demo::Demo(GLFWwindow* window) : window(window), cube_mesh(nullptr), uniTrans(0), cube_model(nullptr) {
+}
+
+Demo::~Demo() {
+
 }
 
 void create_shaders(GLuint* vs, GLuint* fs, GLuint* shader_programme, const char* vertex_shader, const char* fragment_shader) {
@@ -55,11 +57,6 @@ int Demo::load_assets() {
 	loader::create_object(&cube_vtni, objPath);
 	loader::load_tex(texPath, &texID);
 
-	cube_mesh = new mesh(&cube_vtni);
-	model cube_model(cube_mesh, texID);
-	GLuint cube_instance = cube_model.create_instance();
-	glm::mat4 local_trans = cube_model.get_local_trans(cube_instance);
-
 	const char* vertex_shader =
 		"#version 330 core\n"
 		"layout(location = 0) in vec3 pos;"
@@ -90,6 +87,10 @@ int Demo::load_assets() {
 	glUseProgram(shader_programme);
 	uniTrans = glGetUniformLocation(shader_programme, "trans");
 	glUniform1i(glGetUniformLocation(shader_programme, "intexture"), 0);
+
+	cube_mesh = new mesh(&cube_vtni);
+	cube_model = new model(cube_mesh, texID);
+	GLuint cube_instance = cube_model->create_instance(shader_programme);
 
 	return 0;
 }
@@ -134,6 +135,7 @@ int Demo::run() {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cube_mesh->elementBufferID);
 		glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
 		glDrawElements(GL_TRIANGLES, cube_mesh->size, GL_UNSIGNED_INT, nullptr);
+		(*cube_model).render_instances();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
