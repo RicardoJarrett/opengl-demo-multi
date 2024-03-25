@@ -48,8 +48,8 @@ void create_shaders(GLuint* vs, GLuint* fs, GLuint* shader_programme, const char
 }
 
 int Demo::load_assets() {
-	std::string objPath = "C:\\Users\\ricar\\Documents\\GitHub\\opengl-demo\\opengl-demo-multi\\cube.obj";
-	std::string texPath = "C:\\Users\\ricar\\Documents\\GitHub\\opengl-demo\\opengl-demo-multi\\cube.png";
+	std::string objPath = "cube.obj";
+	std::string texPath = "cube.png";
 	GLuint texID = 0;
 	vtni cube_vtni;
 	loader::create_object(&cube_vtni, objPath);
