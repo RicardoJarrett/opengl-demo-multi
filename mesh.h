@@ -6,7 +6,7 @@
 
 class mesh {
 public:
-	GLuint vertexBufferID, elementBufferID, texID, vertexArrayID;
+	GLuint meshID, vertexBufferID, elementBufferID, texID, vertexArrayID;
 	int size;
-	mesh(vtni* data);
+	mesh(GLuint id, vtni* data);
 };

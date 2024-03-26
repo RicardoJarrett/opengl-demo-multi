@@ -18,3 +18,15 @@ std::string vtni::string() {
 void vtni::cleanup() {
 	free(this);
 }
+
+rts_transformation::rts_transformation(glm::mat4 r, glm::mat4 t, glm::mat4 s) {
+	rotation = r;
+	translation = t;
+	scale = s;
+}
+
+rts_transformation::rts_transformation() {
+	rotation = glm::mat4(1.0f);
+	translation = glm::mat4(1.0f);
+	scale = glm::mat4(1.0f);
+}

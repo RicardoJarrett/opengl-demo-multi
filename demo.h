@@ -12,8 +12,10 @@ public:
 	GLFWwindow* window;
 	GLint uniTrans;
 	mesh* cube_mesh;
-	model* cube_model;
-	Demo(GLFWwindow* window);
+	model cube_model;
+	model_instance cube_i, cube_i2;
+
+	Demo(GLFWwindow* _window);
 	~Demo();
 	int load_assets();
 	int run();

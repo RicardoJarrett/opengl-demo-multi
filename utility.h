@@ -30,3 +30,9 @@ struct vtni {
 	std::string string();
 	void cleanup();
 };
+
+struct rts_transformation {
+	glm::mat4 rotation, translation, scale;
+	rts_transformation(glm::mat4 r, glm::mat4 t, glm::mat4 s);
+	rts_transformation();
+};

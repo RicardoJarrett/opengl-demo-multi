@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-mesh::mesh(vtni* data) : vertexBufferID(0), vertexArrayID(0), elementBufferID(0), size(0) {
+mesh::mesh(GLuint id, vtni* data) : meshID(id), vertexBufferID(0), vertexArrayID(0), texID(0), elementBufferID(0), size(0) {
 	vtni& _data = *data;
 	if (_data.size <= 0) {
 		std::cout << "Error: vtni size: " << _data.size << "\n";
