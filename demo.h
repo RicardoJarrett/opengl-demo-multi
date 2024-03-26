@@ -6,6 +6,7 @@
 #include "model.h"
 
 #include <GLFW/glfw3.h>
+#include <vector>
 
 class Demo {
 public:
@@ -13,10 +14,14 @@ public:
 	GLint uniTrans;
 	mesh* cube_mesh;
 	model cube_model;
-	model_instance cube_i, cube_i2;
+	int cube_count;
+	std::vector<model_instance*> instances;
+	std::vector<glm::vec3> rotations;
+	std::vector<glm::vec3> translations;
 
 	Demo(GLFWwindow* _window);
 	~Demo();
 	int load_assets();
 	int run();
+	void move_cubes();
 };

@@ -5,14 +5,14 @@
 #include "utility.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/random.hpp>
 
 Demo::Demo(GLFWwindow* _window) {
 	window = _window;
 	uniTrans = 0;
 	cube_mesh = nullptr;
 	cube_model = model();
-	cube_i = model_instance();
-	cube_i2 = model_instance();
+	cube_count = 32;
 }
 
 Demo::~Demo() {
@@ -102,8 +102,15 @@ int Demo::load_assets() {
 
 	GLuint model_id = 0;
 	cube_model = {model_id, mesh_id, texID, cube_mesh };
-	cube_i = { &cube_model, shader_programme, rts_transformation(), rts_transformation(), true };
-	cube_i2 = { &cube_model, shader_programme, rts_transformation(), rts_transformation(), true };
+	for (int i = 0; i < cube_count; i++) {
+		model_instance* tInstance = nullptr;
+		tInstance = new model_instance(&cube_model, shader_programme, rts_transformation(), rts_transformation(), true);
+		instances.push_back(tInstance);
+		rotations.push_back(glm::vec3(glm::linearRand(-1.0f, 1.0f), glm::linearRand(-1.0f, 1.0f), glm::linearRand(-1.0f, 1.0f)));
+		translations.push_back(glm::vec3(glm::linearRand(0.0f, 0.003f), glm::linearRand(0.0f, 0.003f), 1.0f));
+		tInstance->local_scale(glm::vec3(glm::linearRand(0.0f, 0.25f)));
+		tInstance->world_translate(glm::vec3(glm::linearRand(-0.75f, 0.75f), glm::linearRand(-0.75f, 0.75f), 1.0f));
+	}
 
 	return 0;
 }
@@ -114,7 +121,8 @@ float x_speed = 0.1f;
 float y_speed = 0.2f;
 int x_dir = 1;
 int y_dir = 1;
-void move_cubes(model_instance* cube1, model_instance* cube2) {
+
+void Demo::move_cubes() {
 	if ((x_bounce >= 100.0f) || (x_bounce <= -100.0f)) {
 		x_dir *= -1;
 	}
@@ -123,24 +131,20 @@ void move_cubes(model_instance* cube1, model_instance* cube2) {
 	}
 	x_bounce += x_speed * x_dir;
 	y_bounce += y_speed * y_dir;
-	cube1->local_rotate(glm::vec3(0.1, 0.2, 0.05));
-	cube1->local_translate(glm::vec3(x_dir * 0.0001, y_dir * 0.0002, 0.0));
-	cube2->local_rotate(glm::vec3(0.2, 0.15, 0.02));
-	cube2->local_translate(glm::vec3(x_dir * (-0.0003), y_dir * (-0.0002), 0.0));
+	for (int i = 0; i < cube_count; i++) {
+		instances[i]->local_rotate(rotations[i]);
+		glm::vec3 trans = { translations[i].x * x_dir, translations[i].y * y_dir, 0.0 };
+		instances[i]->local_translate(trans);
+	}
 }
 
 int Demo::run() {
-	cube_i.local_scale(glm::vec3(0.25, 0.25, 0.25));
-	cube_i.world_translate(glm::vec3(0.2, 0.2, 0.0));
-
-	cube_i2.local_scale(glm::vec3(0.2, 0.2, 0.2));
-	cube_i2.world_translate(glm::vec3(-0.2, -0.1, 0.0));
-
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		cube_i.render();
-		cube_i2.render();
-		move_cubes(&cube_i, &cube_i2);
+		move_cubes();
+		for (int i = 0; i < cube_count; i++) {
+			instances[i]->render();
+		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
