@@ -12,7 +12,7 @@ Demo::Demo(GLFWwindow* _window) {
 	uniTrans = 0;
 	cube_mesh = nullptr;
 	cube_model = model();
-	cube_count = 32;
+	cube_count = 256;
 }
 
 Demo::~Demo() {
@@ -32,7 +32,7 @@ const char* vertex_shader =
 "void main(){"
 "  v_texCoords = tex;"
 //"  gl_Position = trans * vec4(pos, 1.0);"
-"  gl_Position = projection * view * model * vec4(pos, 1.0);"
+"  gl_Position = model * view * projection * vec4(pos, 1.0);"
 "}";
 
 const char* fragment_shader =
@@ -104,12 +104,12 @@ int Demo::load_assets() {
 	cube_model = {model_id, mesh_id, texID, cube_mesh };
 	for (int i = 0; i < cube_count; i++) {
 		model_instance* tInstance = nullptr;
-		tInstance = new model_instance(&cube_model, shader_programme, rts_transformation(), rts_transformation(), true);
+		tInstance = new model_instance(&cube_model, shader_programme, true);
 		instances.push_back(tInstance);
 		rotations.push_back(glm::vec3(glm::linearRand(-1.0f, 1.0f), glm::linearRand(-1.0f, 1.0f), glm::linearRand(-1.0f, 1.0f)));
-		translations.push_back(glm::vec3(glm::linearRand(0.0f, 0.003f), glm::linearRand(0.0f, 0.003f), 1.0f));
-		tInstance->local_scale(glm::vec3(glm::linearRand(0.0f, 0.25f)));
-		tInstance->world_translate(glm::vec3(glm::linearRand(-0.75f, 0.75f), glm::linearRand(-0.75f, 0.75f), 1.0f));
+		translations.push_back(glm::vec3(glm::linearRand(0.0f, 0.003f), glm::linearRand(0.0f, 0.003f), 0.0f));
+		tInstance->local_scale(glm::vec3(glm::linearRand(0.0f, 0.05f)));
+		tInstance->local_translate(glm::vec3(glm::linearRand(-0.75f, 0.75f), glm::linearRand(-0.75f, 0.75f), 0.0f));
 	}
 
 	return 0;
